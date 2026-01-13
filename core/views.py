@@ -1,16 +1,36 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseForbidden
 from .models import OneTimeLoginToken
 from django.contrib.auth import get_user_model
+from django.db.models import Sum
 
 User = get_user_model()
 # Create your views here.
-class HomePageView(TemplateView):
+class HomePageView(View):
     template_name = "index.html"
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        context = {}
+        if user.is_authenticated:
+            amount = request.user.candidate * 300
+            diposits = user.diposits.all().order_by("-created_at")
+            total_amount = (
+                user.diposits
+                    .aggregate(total=Sum("amount"))
+                    .get("total") or 0
+            )
+            context = {
+                "amount": amount,
+                "diposits": diposits,
+                "total_amount": total_amount
+            }
+        return render(request, self.template_name, context)
+
 
 
 @staff_member_required
@@ -26,7 +46,7 @@ def generate_login_link(request, user_id):
     token = OneTimeLoginToken.create_token(user)
 
     login_url = request.build_absolute_uri(
-        f"/accounts/one-time-login/{token.token}/"
+        f"/one-time-login/{token.token}/"
     )
 
     return render(request, "share_login_link.html", {

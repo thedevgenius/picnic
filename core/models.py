@@ -64,3 +64,12 @@ class OneTimeLoginToken(models.Model):
             user=user,
             expires_at=timezone.now() + timedelta(minutes=minutes)
         )
+
+class Diposit(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='diposits')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.amount}"
+

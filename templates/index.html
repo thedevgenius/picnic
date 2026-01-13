@@ -7,14 +7,69 @@
 
     <h6 class="text-gray-400 text-center font-bold tracking-widest mb-2">WELCOME TO</h6>
     <h2 class="text-2xl font-black text-slate-800 text-center mb-0">Work-Life Balance</h2>
-    <p class="text-slate-300 text-center text-sm mb-5">1 Day Trial Version</p>
+    <p class="text-slate-400 text-center text-sm mb-5">1 Day Trial Version</p>
 
-    <p class="text-lg text-gray-700 text-center font-medium mb-4">Join us for a 1-day trial of happiness — food, games, family & unlimited fun.</p>
-
+    
+    {% if user.is_authenticated %}
+        <div class="bg-white rounded-2xl shadow-sm p-4 mb-4">
+        
+            <!-- Welcome -->
+            <p class=" font-semibold mb-2">
+                Welcome, <span class="font-bold">{{ user.first_name }} {{ user.last_name }}</span>
+            </p>
+        
+            {% if not diposits %}
+            <!-- ================= PAY FIRST ================= -->
+            <div class="text-center">
+                <p class="text-sm text-gray-500 mb-3">
+                    Please pay the advance amount to confirm participation
+                </p>
+        
+                <a href="upi://pay?pa=dhararupam@upi&pn=Picnic Fund&am={{ amount }}&cu=INR&tn=Office%20Picnic%20Advance"
+                    class="block w-full px-4 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-lg transition">
+                    Pay Now
+                </a>
+        
+                <p class="text-xs text-gray-400 mt-3">
+                    Secure UPI payment • One-time only
+                </p>
+            </div>
+        
+            {% else %}
+            <!-- ================= AFTER PAYMENT ================= -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mt-4">
+    
+                <div class="grid grid-cols-2 gap-3 text-center">
+        
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <p class="text-xs text-gray-500 mb-1">Participants</p>
+                        <p class="text-xl font-bold text-gray-900">
+                            {{ user.candidate }}
+                        </p>
+                    </div>
+        
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <p class="text-xs text-gray-500 mb-1">Amount Deposited</p>
+                        <p class="text-xl font-bold text-gray-900">
+                            ₹{{ total_amount }}
+                        </p>
+                    </div>
+        
+                </div>
+        
+                <p class="text-center text-xs text-gray-500 mt-3">
+                    Thanks for participaing 🎉
+                </p>
+            </div>
+            {% endif %}
+        
+        </div>
+    {% endif %}
+        
 
     <div class="rounded-xl overflow-hidden bg-white p-3">
         <img src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSwSQvJcvKE65cVQcWuDUGfmrf5rgVc4Drz8-55LgFyVRvBfasBN0oIHTXgwwsVCIv0Yrh7u56_KmSSVn9S_WDOR1-SJT5HjPeHditeMqeZw_jlZmHJgFhSEE_lnbVKGv-fn9d1M=s680-w680-h510" alt="" 
-        class="rounded-xl mb-4">
+        class="rounded-xl mb-4 max-h-48 w-full object-cover">
 
         <p class="font-medium flex items-center gap-2 mb-1">
             <i class="fa-solid fa-location-dot text-red-500"></i>
@@ -31,7 +86,7 @@
             <span class="font-bold text-gray-900">09:30 AM Onwards</span>
         </p>
 
-        <div class="grid grid-cols-3 gap-3 mt-4">
+        <div class="grid grid-cols-3 gap-3 my-4">
             <a href="tel:6295828230" class="bg-blue-50 rounded-lg py-3 gap-2 flex flex-col justify-center items-center">
                 <i class="fa-solid fa-phone text-blue-600"></i>
                 <span class="font-semibold text-blue-600 text-xs">CALL</span>
@@ -45,7 +100,22 @@
                 <span class="font-semibold text-orange-600 text-xs">DIRECTION</span>
             </a>
         </div>
+
+        <a href="#"
+            class="block w-full px-4 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-lg transition text-center mb-4">
+            View Details
+        </a>
+        
+        {% if not user.is_authenticated %}
+            <a href="https://wa.me/916295828230?text=I%20want%20to%20join%20Picnic" target="_blank" class="block w-full px-4 py-4 bg-transparent border border-indigo-600 hover:bg-indigo-700 text-indigo-600 font-bold rounded-2xl text-lg transition text-center mb-4">
+                Join Us Now
+            </a>
+        {% endif %}
+            
     </div>
+    
+
+    
     
     
 
