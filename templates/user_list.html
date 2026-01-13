@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <table class="w-full border border-gray-200 rounded-xl overflow-hidden">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="p-3 text-left">Name</th>
+      <th class="p-3 text-left">Phone</th>
+      <th class="p-3">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for user in users %}
+    <tr class="border-t">
+        <td class="p-3 font-medium"><strong>{{ user.first_name }} {{ user.last_name }}</strong></td>
+      <td class="p-3 font-medium">{{ user.phone }}</td>
+      <td class="p-3 text-center">
+        <a href="{% url 'generate_login_link' user.id %}"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+          <i class="fa-solid fa-link"></i>
+          
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock content %}
+    
