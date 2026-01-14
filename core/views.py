@@ -27,9 +27,11 @@ class HomePageView(View):
             context = {
                 "amount": amount,
                 "diposits": diposits,
-                "total_amount": total_amount
+                "total_amount": total_amount,
+                "participant": user.candidate,
             }
         return render(request, self.template_name, context)
+    
 
 
 

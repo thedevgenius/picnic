@@ -21,13 +21,14 @@
             {% if not diposits %}
             <!-- ================= PAY FIRST ================= -->
             <div class="text-center">
-                <p class="text-sm text-gray-500 mb-3">
+                <p class="text-sm text-gray-500 mb-1">
                     Please pay the advance amount to confirm participation
                 </p>
+                <p class="text-[11px] text-gray-400 mb-2">Per head advance: <strong class="text-gray-600">₹300</strong></p>
         
                 <a href="upi://pay?pa=dhararupam@upi&pn=Picnic Fund&am={{ amount }}&cu=INR&tn=Office%20Picnic%20Advance"
                     class="block w-full px-4 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-lg transition">
-                    Pay Now
+                    Pay Now for {{ participant }} participant
                 </a>
         
                 <p class="text-xs text-gray-400 mt-3">
