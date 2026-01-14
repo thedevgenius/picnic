@@ -58,4 +58,5 @@ class Diposit(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.user.is_paid = True
+        self.user.is_requested = False
         self.user.save()

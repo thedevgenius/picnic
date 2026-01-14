@@ -86,16 +86,21 @@ class JoinPageView(View):
             }
         )
         if user:
-            user.candidate = candidate
-            user.is_requested = True
-            user.save()
-            login(request, user)
+            if user.is_paid:
+                login(request, user)
+                return redirect("home")
+            else:
+                user.candidate = candidate
+                user.is_requested = True
+                user.save()
+                login(request, user)
         else:
             print("Failed to create or fetch user with phone:", phone)
 
 
         amount = candidate * PRICE_PER_PERSON
         upi_url = generate_upi_url(user)
+        
         return render(request, self.template_name, {
             "upi_url": upi_url,
             "amount": amount,
