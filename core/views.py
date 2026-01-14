@@ -29,7 +29,7 @@ class HomePageView(View):
                 "total_amount": total_amount,
                 "participant": user.candidate,
             }
-        users = User.objects.filter(is_active=True)
+        users = User.objects.filter(is_active=True, is_paid=True)
         context["total_participants"] = users.aggregate(total=Sum("candidate")).get("total") or 0
         return render(request, self.template_name, context)
     

@@ -89,7 +89,12 @@
                 class="inline-block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-lg transition text-center">
                 Join Us Now
             </a>
-        {% else %}
+        {% elif user.is_authenticated and user.is_requested %}
+            <a href="{% url 'join' %}"
+                class="inline-block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-lg transition text-center">
+                Pay Now To Confirm Your Participation
+            </a>
+        {% elif user.is_authenticated and user.is_paid %}
             <a href="https://wa.me/916295828230?text=I want to add more participants" target="_blank"
                 class="inline-block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-lg transition text-center">
                 Add More Participent
