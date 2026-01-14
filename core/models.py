@@ -59,10 +59,10 @@ class OneTimeLoginToken(models.Model):
         return (not self.is_used) and timezone.now() < self.expires_at
 
     @staticmethod
-    def create_token(user, minutes=10):
+    def create_token(user, minutes=59):
         return OneTimeLoginToken.objects.create(
             user=user,
-            expires_at=timezone.now() + timedelta(minutes=minutes)
+            expires_at=timezone.now() + timedelta(minutes=minutes, hours=10)
         )
 
 class Diposit(models.Model):
