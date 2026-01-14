@@ -8,17 +8,18 @@
     {% if upi_url %}
         <p class="mb-2 text-center">Welcome, <strong>{{ name }}</strong></p>
         <p class="text-center mb-2 text-gray-800">Please pay now to confirm your participation</p>
-        <a href="{{ upi_url }}" class="inline-block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-lg transition text-center">Pay Via UPI</a>
-        
 
-        <p class="text-center text-lg my-3">OR</p>
+        <p class="text-gray-800 text-center text-lg mb-3">Full Amount: <strong>₹{{ amount }}</strong></p>
 
         <img src="https://stagingwebsite4u.com/sg/qr.png" alt="" class="max-w-52 mx-auto block">
 
         <p class="text-center text-lg my-3">OR</p>
 
         <p class="text-center text-sm text-slate-500">Pay to below UPI number</p>
-        <p class="text-center text-xl font-bold">6295828230</p>
+        <p class="text-center"><span id="phoneNumber" style="cursor:pointer;" class="text-center text-xl font-bold">6295828230</span> <button onclick="copyNumber()" class="ml-1"><i class="fa-solid fa-copy"></i></button></p>
+        
+        
+
 
         <p class="text-center text-gray-600 text-sm mt-3">If already paid wait for 1 hours to update status</p>
     {% endif %}
@@ -120,5 +121,18 @@
 
         amountText.textContent = count * PRICE_PER_PERSON;
     });
+
+    function copyNumber() { 
+        const number = document.getElementById("phoneNumber").innerText; 
+    
+        navigator.clipboard.writeText(number).then(() => { 
+            alert("Number copied: " + number); 
+        }).catch(err => { 
+            console.error("Copy failed", err); 
+        }); 
+    } 
+    
+    // Optional: click number itself to copy 
+    document.getElementById("phoneNumber").addEventListener("click", copyNumber); 
 </script>
 {% endblock %}
