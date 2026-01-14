@@ -69,3 +69,7 @@ def one_time_login(request, token):
 
     login(request, token_obj.user)
     return redirect("home")
+
+
+class DetailsPageView(TemplateView):
+    template_name = "details.html"
