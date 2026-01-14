@@ -30,6 +30,8 @@ class User(AbstractUser, PermissionsMixin):
     username = None
     phone = models.CharField(max_length=15, unique=True, db_index=True)
     candidate = models.IntegerField(default=1)
+    is_requested = models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
     
     objects = UserManager()
 
@@ -37,33 +39,13 @@ class User(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.phone
+        return self.get_full_name() or self.phone
 
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
 
-class OneTimeLoginToken(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="login_tokens"
-    )
-    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-    is_used = models.BooleanField(default=False)
-    expires_at = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def is_valid(self):
-        return (not self.is_used) and timezone.now() < self.expires_at
-
-    @staticmethod
-    def create_token(user, minutes=59):
-        return OneTimeLoginToken.objects.create(
-            user=user,
-            expires_at=timezone.now() + timedelta(minutes=minutes, hours=10)
-        )
 
 class Diposit(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='diposits')
@@ -73,3 +55,7 @@ class Diposit(models.Model):
     def __str__(self):
         return f"{self.user} - {self.amount}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.user.is_paid = True
+        self.user.save()

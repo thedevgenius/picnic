@@ -8,91 +8,72 @@
     <h6 class="text-gray-400 text-center font-bold tracking-widest mb-2">WELCOME TO</h6>
     <h2 class="text-2xl font-black text-slate-800 text-center mb-0">Work-Life Balance</h2>
     <p class="text-slate-400 text-center text-sm mb-5">1 Day Trial Version</p>
-
     
-    {% if user.is_authenticated %}
-        <div class="bg-white rounded-2xl shadow-sm p-4 mb-4">
-        
-            <!-- Welcome -->
-            <p class=" font-semibold mb-2">
-                Welcome, <span class="font-bold">{{ user.first_name }} {{ user.last_name }}</span>
-            </p>
-        
-            {% if not diposits %}
-            <!-- ================= PAY FIRST ================= -->
-            <div class="text-center">
-                <p class="text-sm text-gray-500 mb-1">
-                    Please pay the advance amount to confirm participation
-                </p>
-                <p class="text-[11px] text-gray-400 mb-2">Per head advance: <strong class="text-gray-600">₹300</strong></p>
-        
-                <a href="upi://pay?pa=dhararupam@upi&pn=Picnic Fund&am={{ amount }}&cu=INR&tn=Office%20Picnic%20Advance"
-                    class="block w-full px-4 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-lg transition">
-                    Pay Now for {{ participant }} participant
-                </a>
-        
-                <p class="text-xs text-gray-400 mt-3">
-                    Secure UPI payment • One-time only
-                </p>
-            </div>
-        
-            {% else %}
-            <!-- ================= AFTER PAYMENT ================= -->
-            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mt-4">
     
-                <div class="grid grid-cols-2 gap-3 text-center">
-        
-                    <div class="bg-white rounded-xl p-3 shadow-sm">
-                        <p class="text-xs text-gray-500 mb-1">Participants</p>
-                        <p class="text-xl font-bold text-gray-900">
-                            {{ user.candidate }}
-                        </p>
-                    </div>
-        
-                    <div class="bg-white rounded-xl p-3 shadow-sm">
-                        <p class="text-xs text-gray-500 mb-1">Amount Deposited</p>
-                        <p class="text-xl font-bold text-gray-900">
-                            ₹{{ total_amount }}
-                        </p>
-                    </div>
-        
+    {% if user.is_authenticated and diposits %}
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-4">
+            <p class="mb-2 text-gray-800">Welcome, <strong>{{ user.get_full_name }}</strong></p>
+            <div class="grid grid-cols-2 gap-3 text-center">
+    
+                <div class="bg-white rounded-xl p-3 shadow-sm">
+                    <p class="text-xs text-gray-500 mb-1">Your Participants</p>
+                    <p class="text-xl font-bold text-gray-900">
+                        {{ user.candidate }}
+                    </p>
                 </div>
-        
-                <p class="text-center text-xs text-gray-500 mt-3">
-                    Thanks for participaing 🎉
-                </p>
+    
+                <div class="bg-white rounded-xl p-3 shadow-sm">
+                    <p class="text-xs text-gray-500 mb-1">Amount Deposited</p>
+                    <p class="text-xl font-bold text-gray-900">
+                        ₹{{ total_amount }}
+                    </p>
+                </div>
+    
             </div>
-            {% endif %}
-        
+    
+            <p class="text-center text-xs text-gray-500 mt-3">
+                Thanks for participaing 🎉
+            </p>
         </div>
     {% endif %}
         
-
+    
     <div class="rounded-xl overflow-hidden bg-white p-3">
         <img src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSwSQvJcvKE65cVQcWuDUGfmrf5rgVc4Drz8-55LgFyVRvBfasBN0oIHTXgwwsVCIv0Yrh7u56_KmSSVn9S_WDOR1-SJT5HjPeHditeMqeZw_jlZmHJgFhSEE_lnbVKGv-fn9d1M=s680-w680-h510" alt="" 
         class="rounded-xl mb-4 max-h-48 w-full object-cover">
 
-        <p class="font-medium flex items-center gap-2 mb-1">
-            <i class="fa-solid fa-location-dot text-red-500"></i>
-            <span class="font-bold text-gray-900">Diamond Harbour, Kellar Math</span>
-        </p>
+        <div class="flex flex-wrap gap-3 justify-between items-start">
+            <div>   
+                <p class="font-medium flex items-center gap-2 mb-1">
+                    <i class="fa-solid fa-location-dot text-red-500"></i>
+                    <span class="font-bold text-gray-900">Diamond Harbour, Kellar Math</span>
+                </p>
 
-        <p class="font-medium flex items-center gap-2 mb-1">
-            <i class="fa-solid fa-calendar-days text-blue-500"></i>
-            <span class="font-bold text-gray-900">Sunday, 18th January 2026</span>
-        </p>
+                <p class="font-medium flex items-center gap-2 mb-1">
+                    <i class="fa-solid fa-calendar-days text-blue-500"></i>
+                    <span class="font-bold text-gray-900">Sunday, 18th January 2026</span>
+                </p>
 
-        <p class="font-medium flex items-center gap-2">
-            <i class="fa-solid fa-clock text-green-500"></i>
-            <span class="font-bold text-gray-900">09:30 AM Onwards</span>
-        </p>
+                <p class="font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-clock text-green-500"></i>
+                    <span class="font-bold text-gray-900">09:30 AM Onwards</span>
+                </p>
+            </div>
+
+            <div class="bg-gray-100 border border-gray-300 rounded-xl text-center p-3">
+                <i class="fa-solid fa-users text-purple-600"></i>
+                <h2 class="text-gray-700 text-sm font-semibold">Total Participent</h2>
+                <span class="text-xl font-bold flex items-center gap-1 justify-center"> {{ total_participants }}</span>
+            </div>
+        </div>
+        
 
         <div class="grid grid-cols-3 gap-3 my-4">
             <a href="tel:6295828230" class="bg-blue-50 rounded-lg py-3 gap-2 flex flex-col justify-center items-center">
                 <i class="fa-solid fa-phone text-blue-600"></i>
                 <span class="font-semibold text-blue-600 text-xs">CALL</span>
             </a>
-            <a href="https://wa.me/916295828230" target="_blank" class="bg-green-50 rounded-lg py-3 gap-2 flex flex-col justify-center items-center">
+            <a href="https://chat.whatsapp.com/DZMSrjMCzFXKIxrOGqUBOd" target="_blank" class="bg-green-50 rounded-lg py-3 gap-2 flex flex-col justify-center items-center">
                 <i class="fa-brands fa-whatsapp text-green-600"></i>
                 <span class="font-semibold text-green-600 text-xs">WHATSAPP</span>
             </a>
@@ -102,26 +83,33 @@
             </a>
         </div>
 
-        <a href="{% url 'details' %}"
-            class="block w-full px-4 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-lg transition text-center mb-4">
-            View Details
-        </a>
         
-        {% if not user.is_authenticated %}
-            <a href="https://wa.me/916295828230?text=I%20want%20to%20join%20Picnic" target="_blank" class="block w-full px-4 py-4 bg-transparent border border-indigo-600 hover:bg-indigo-700 text-indigo-600 font-bold rounded-2xl text-lg transition text-center mb-4">
+        {% if not user.is_authenticated and not diposits %}
+            <a href="{% url 'join' %}"
+                class="inline-block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-lg transition text-center">
                 Join Us Now
+            </a>
+        {% else %}
+            <a href="https://wa.me/916295828230?text=I want to add more participants" target="_blank"
+                class="inline-block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-lg transition text-center">
+                Add More Participent
             </a>
         {% endif %}
             
     </div>
-    
 
-    
-    
-    
-
-
-    
+    <div class="bg-white rounded-lg p-5 py-7 mt-5">
+        <h2 class="text-gray-900 font-bold text-xl mb-3 text-center">MENU</h2>
+        <ul class="text-lg flex flex-wrap gap-4 justify-center">
+            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-carrot text-orange-600 "></i> Salad</li>
+            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-rice"></i> Plain Rice</li>
+            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-food text-yellow-600"></i> Potato Fry</li>
+            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-drumstick-bite text-red-600"></i> Chicken</li>
+            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-food text-purple-600"></i> Chutney</li>
+            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-cookie text-lime-600"></i> Sweet</li>
+            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-circle text-cyan-600"></i> Hajmola</li>
+        </ul>
+    </div>
 
 
 </div>

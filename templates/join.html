@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Picnic Payment{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded-2xl shadow-sm p-6">
+    
+    {% if upi_url %}
+        <p class="mb-2 text-center">Welcome, <strong>{{ name }}</strong></p>
+        <p class="text-center mb-2 text-gray-800">Please pay now to confirm your participation</p>
+        <a href="{{ upi_url }}" class="inline-block w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full text-lg transition text-center">Pay Via UPI</a>
+        <p class="text-center text-gray-500 text-sm mt-2">If already paid wait for 1 hours to update status</p>
+    {% endif %}
+    
+    
+    {% if not user.is_authenticated %}
+        <h2 class="text-xl font-extrabold text-center mb-2">
+        🧺 Picnic Contribution
+    </h2>
+
+    <p class="text-sm text-slate-500 text-center mb-5">
+        ₹300 per person
+    </p>
+
+    <form method="post" id="payForm" class="space-y-4">
+        {% csrf_token %}
+
+        <!-- Name -->
+        <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1">
+                Your Name
+            </label>
+            <input type="text"
+                   name="name"
+                   required
+                   placeholder="Enter your name"
+                   class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-teal-500">
+        </div>
+
+        <!-- Phone -->
+        <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1">
+                Phone Number
+            </label>
+            <input type="tel"
+                   name="phone"
+                   required
+                   pattern="[0-9]{10}"
+                   placeholder="10-digit mobile number"
+                   class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-teal-500">
+        </div>
+
+        <!-- Participants -->
+        <div>
+            <label class="block text-sm font-bold text-slate-600 mb-1">
+                Number of Participants
+            </label>
+            <select name="candidate"
+                    id="participants"
+                    required
+                    class="w-full border rounded-xl px-4 py-3 bg-white focus:ring-2 focus:ring-teal-500">
+                <option value="1">1 Person</option>
+                <option value="2">2 Persons</option>
+                <option value="3">3 Persons</option>
+                <option value="4">4 Persons</option>
+                <option value="5">5 Persons</option>
+            </select>
+        </div>
+
+        <!-- Amount (Display Only) -->
+        <div class="bg-slate-100 rounded-xl p-4 text-center">
+            <p class="text-sm text-slate-600">Total Amount</p>
+            <p class="text-3xl font-extrabold text-teal-600">
+                ₹ <span id="amount">300</span>
+            </p>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+                class="w-full bg-teal-600 text-white rounded-xl py-3 font-bold active:scale-95 transition">
+            🚀 Proceed to Pay
+        </button>
+
+        <p class="text-xs text-center text-slate-400">
+            Payment will open in your UPI app
+        </p>
+    </form>
+    {% endif %}
+        
+    
+</div>
+
+<!-- JS (ONLY FOR AMOUNT CALCULATION) -->
+
+{% if upi_url %}
+    <script>
+        alert("Redirecting to:" + upi_url);
+        window.location.href = "{{ upi_url }}";
+    </script>
+{% endif %}
+    
+<script>
+    const PRICE_PER_PERSON = 300;
+    const MIN_PARTICIPANTS = 1;
+
+    const participantSelect = document.getElementById('participants');
+    const amountText = document.getElementById('amount');
+
+    participantSelect.addEventListener('change', function () {
+        const count = parseInt(this.value || 0);
+
+        if (count < MIN_PARTICIPANTS) {
+            amountText.textContent = PRICE_PER_PERSON;
+            return;
+        }
+
+        amountText.textContent = count * PRICE_PER_PERSON;
+    });
+</script>
+{% endblock %}
