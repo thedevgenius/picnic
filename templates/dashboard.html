@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Work-Life Balance{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen bg-slate-100 max-w-md mx-auto p-4 space-y-4">
+
+    <!-- Header -->
+    <div class="bg-indigo-600 text-white rounded-2xl p-4 shadow">
+        <h1 class="text-xl font-black flex items-center gap-2">
+            <i class="fa-solid fa-wallet"></i>
+            Picnic Expense Manager
+        </h1>
+        <p class="text-xs opacity-90">Single Page Dashboard</p>
+    </div>
+
+    <!-- Summary -->
+    <div class="grid grid-cols-3 gap-3 text-center">
+        <!-- Deposit Card -->
+        <div onclick="showTable('deposit')"
+            class="bg-white rounded-xl p-3 shadow cursor-pointer active:scale-95">
+            <i class="fa-solid fa-arrow-down text-green-600 text-lg"></i>
+            <p class="text-[10px] font-bold text-slate-400">DEPOSIT</p>
+            <p class="text-lg font-black text-green-600">₹{{ total_deposit }}</p>
+        </div>
+
+        <!-- Expense Card -->
+        <div onclick="showTable('expense')"
+            class="bg-white rounded-xl p-3 shadow cursor-pointer active:scale-95">
+            <i class="fa-solid fa-arrow-up text-red-500 text-lg"></i>
+            <p class="text-[10px] font-bold text-slate-400">EXPENSE</p>
+            <p class="text-lg font-black text-red-500">₹{{ total_expense }}</p>
+        </div>
+
+        <!-- Balance -->
+        <div class="bg-white rounded-xl p-3 shadow">
+            <i class="fa-solid fa-scale-balanced text-indigo-600 text-lg"></i>
+            <p class="text-[10px] font-bold text-slate-400">BALANCE</p>
+            <p class="text-lg font-black text-indigo-600">₹{{ balance }}</p>
+        </div>
+
+    </div>
+
+    <div id="depositTable" class="hidden bg-white rounded-2xl p-4 shadow">
+        <h3 class="font-bold text-green-700 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-list"></i> Deposit List
+        </h3>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-slate-400 text-xs border-b">
+                        <th class="text-left py-2">User</th>
+                        <th class="text-right">Amount</th>
+                        <th class="text-right">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in deposits %}
+                    <tr class="border-b last:border-none">
+                        <td class="py-2 font-semibold">{{ d.user }}</td>
+                        <td class="text-right text-green-600 font-bold">₹{{ d.amount }}</td>
+                        <td class="text-right text-xs text-slate-500">
+                            {{ d.created_at|date:"d M H:i" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-slate-400">
+                            No deposits yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="expenseTable" class="bg-white rounded-2xl p-4 shadow">
+        <h3 class="font-bold text-red-600 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-list"></i> Expense List
+        </h3>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-slate-400 text-xs border-b">
+                        <th class="text-left py-2">Title</th>
+                        <th class="text-right">Amount</th>
+                        <th class="text-right">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in expenses %}
+                    <tr class="border-b last:border-none">
+                        <td class="py-2 font-semibold">{{ e.title }} 
+                        {% if e.remark %}
+                            <br> <span class="text-[11px] text-gray-400">{{ e.remark }}</span>
+                        {% endif %}
+                            </td>
+                        <td class="text-right text-red-500 font-bold">₹{{ e.amount }}</td>
+                        <td class="text-right text-xs text-slate-500">
+                            {{ e.created_at|date:"d M H:i" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-slate-400">
+                            No expenses yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {% if user.is_superuser %}
+        <!-- Add Deposit -->
+        <div class="bg-white rounded-2xl p-4 shadow">
+            <h3 class="font-bold text-green-700 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-circle-plus"></i> Add Deposit
+            </h3>
+
+            <form method="POST" class="space-y-3">
+                {% csrf_token %}
+                <div>
+                    <label class="text-xs font-bold text-slate-500">User</label>
+                    <select name="user"
+                        class="w-full mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        {% for user in deposit_form.user.field.queryset %}
+                            <option value="{{ user.id }}">{{ user }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3.5 text-slate-400 font-bold">₹</span>
+                        <input type="number" step="0.01" name="amount" required
+                            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                </div>
+
+                <button name="add_deposit"
+                    class="w-full bg-green-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-check"></i> Save Deposit
+                </button>
+            </form>
+        </div>
+
+        <!-- Add Expense  -->
+        <div class="bg-white rounded-2xl p-4 shadow">
+            <h3 class="font-bold text-red-600 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-circle-minus"></i> Add Expense 
+            </h3>
+
+            <form method="POST" class="space-y-3">
+                {% csrf_token %}
+                <div>
+                    <label class="text-xs font-bold text-slate-500">User</label>
+                    <select name="user"
+                        class="w-full mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        {% for user in expense_form.user.field.queryset %}
+                            <option value="{{ user.id }}">{{ user }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Title</label>
+                    <input type="text" name="title" required
+                        class="w-full mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3.5 text-slate-400 font-bold">₹</span>
+                        <input type="number" step="0.01" name="amount" required
+                            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Remark</label>
+                    <input type="text" name="remark"
+                        class="w-full mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+
+                <button name="add_expense"
+                    class="w-full bg-red-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-check"></i> Save Expense
+                </button>
+            </form>
+        </div>
+
+        <!-- Calculate  -->
+        <div class="bg-white rounded-2xl p-4 shadow">
+            <h3 class="font-bold text-indigo-600 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-calculator"></i> Calculate
+            </h3>
+
+            <form method="POST" class="space-y-3">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Adjusted Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3.5 text-slate-400 font-bold">₹</span>
+                        <input type="number" step="0.01" name="adjusted_amount" required
+                            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <button name="calculate"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-check"></i> Calculate
+                </button>
+            </form>
+        </div>
+    {% endif %}
+    
+</div>
+
+
+<script>
+function showTable(type) {
+    document.getElementById('depositTable').classList.add('hidden');
+    document.getElementById('expenseTable').classList.add('hidden');
+
+    if (type === 'deposit') {
+        document.getElementById('depositTable').classList.remove('hidden');
+    } else {
+        document.getElementById('expenseTable').classList.remove('hidden');
+    }
+}
+</script>
+{% endblock %}

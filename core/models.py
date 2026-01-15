@@ -56,7 +56,28 @@ class Diposit(models.Model):
         return f"{self.user} - {self.amount}"
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.user.is_paid = True
-        self.user.is_requested = False
-        self.user.save()
+        if not self.user.is_paid:
+            self.user.is_paid = True
+            self.user.is_requested = False
+            self.user.save()
+        return super().save(*args, **kwargs)
+        
+
+class Expense(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expenses', limit_choices_to={'is_staff': True})
+    title = models.CharField(max_length=255)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    remark = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.amount}"
+    
+
+class Settings(models.Model):
+    name = models.CharField(max_length=100, default="default")
+    adjusted_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    is_calculated = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.name} Settings"

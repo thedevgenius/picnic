@@ -37,6 +37,8 @@
             </p>
         </div>
     {% endif %}
+
+
         
     
     <div class="rounded-xl overflow-hidden bg-white p-3">
@@ -108,19 +110,53 @@
             
     </div>
 
-    <div class="bg-white rounded-lg p-5 py-7 mt-5">
-        <h2 class="text-gray-900 font-bold text-xl mb-3 text-center">MENU</h2>
-        <ul class="text-lg flex flex-wrap gap-4 justify-center">
-            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-carrot text-orange-600 "></i> Salad</li>
-            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-rice"></i> Plain Rice</li>
-            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-food text-yellow-600"></i> Potato Fry</li>
-            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-drumstick-bite text-red-600"></i> Chicken</li>
-            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-food text-purple-600"></i> Chutney</li>
-            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-cookie text-lime-600"></i> Sweet</li>
-            <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-circle text-cyan-600"></i> Hajmola</li>
-        </ul>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="bg-white rounded-lg p-5 py-7 mt-5">
+            <h2 class="text-gray-900 font-bold text-xl mb-3 text-center">MENU</h2>
+            <ul class="text-lg flex flex-wrap gap-4 justify-center">
+                <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-carrot text-orange-600 "></i> Salad</li>
+                <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-rice"></i> Plain Rice</li>
+                <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-food text-yellow-600"></i> Potato Fry</li>
+                <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-drumstick-bite text-red-600"></i> Chicken</li>
+                <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-bowl-food text-purple-600"></i> Chutney</li>
+                <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-cookie text-lime-600"></i> Sweet</li>
+                <li class="bg-white shadow-md p-2 rounded-lg"><i class="fa-solid fa-circle text-cyan-600"></i> Hajmola</li>
+            </ul>
+        </div>
+        {% if user.is_authenticated and user.is_paid %}
+            <div class="bg-white rounded-lg p-5 py-7 mt-5">
+                <h2 class="text-gray-900 font-bold text-xl mb-3 text-center">Participents List</h2>
+                <table class="w-full divide-y-2">
+                    <thead class="">
+                        <tr>
+                            <th class="text-left text-indigo-600">Name</th>
+                            <th class=" text-indigo-600">Perople</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.get_full_name }}</td>
+                                <td class="text-center">{{ user.candidate }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+            </div>
+        {% endif %}
     </div>
 
+    
+
+    
+    
+    {% if user.is_authenticated and user.is_superuser %}
+        <div class="mt-4">
+            <a href="{% url 'dashboard' %}" class="inline-block px-3 py-2 bg-indigo-500 text-white rounded-lg">Dashboard</a>
+        </div>
+    {% endif %}
+        
 
 </div>
 {% endblock %}
