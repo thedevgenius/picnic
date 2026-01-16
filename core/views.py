@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.contrib.auth import login, get_user_model
 from django.db.models import Sum
 
@@ -114,7 +114,7 @@ class MyAccountPageView(View):
             return redirect("home")
         if request.user.is_authenticated:
             diposits = request.user.diposits.all().order_by("-created_at")
-            users = User.objects.filter(is_active=True, is_paid=True)
+            users = User.objects.filter(is_active=True, is_paid=True).order_by("first_name")
             total_participants = get_total_participants()
             total_amount = (
                 diposits
@@ -149,7 +149,7 @@ class MyAccountPageView(View):
                 "balance": balance,
                 "settings": settings,
             }
-            
+
         return render(request, self.template_name, context)
 
 class DashboardView(View):
@@ -269,3 +269,6 @@ class BillPageView(View):
         })
 
         return render(request, self.template_name, context)
+
+class GalleryPageView(TemplateView):
+    template_name = "gallery.html"

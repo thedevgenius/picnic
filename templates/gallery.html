@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="max-w-2xl mx-auto px-4">
+        <div class="flex items-center gap-2 mb-6">
+            <a href="{% url 'home' %}" class="inline-flex min-w-9 min-h-9 justify-center items-center rounded-full bg-white"><i class="fa-solid fa-arrow-left"></i></a>
+            <h5 class="font-bold text-gray-900">Gallery</h5>
+        </div>
+        <p id="load" class="text-center ">Loading...</p>
+        <div class="flex flex-wrap justify-center gap-4" id="gallery"></div>
+    </div>
+    
+    <!-- <img src="https://lh3.google.com/u/0/d/1R7OwpdBSZXbr_YzusnC2FeCAZ_odVgPg=w1918-h955-iv1?auditContext=prefetch" alt=""> -->
+{% endblock content %}
+
+
+{% block extra_js %}
+<script>
+    const FOLDER_ID = "1UZREjmKv8CF0idNxWnlKzUbZS1zFUDo0";
+    const API_KEY = "AIzaSyBSbq9NvuFgBKgULB1gRaZst2UFZanL7qI";
+
+    const url = `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents+and+mimeType+contains+'image/'&fields=files(id,name)&key=${API_KEY}`;
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            const gallery = document.getElementById('gallery');
+            const load = document.getElementById('load');
+            load.innerText = '';
+            data.files.forEach(file => {
+                const img = document.createElement('img');
+                
+                img.src = `https://lh3.google.com/u/0/d/${file.id}=w1918-h955-iv1?auditContext=prefetch`;
+                img.className = "w-full h-auto";
+                gallery.appendChild(img);
+            });
+        });
+</script>
+{% endblock extra_js %}
+    
+    
