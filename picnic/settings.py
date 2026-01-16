@@ -45,6 +45,7 @@ AUTH_USER_MODEL = 'core.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,24 +77,24 @@ WSGI_APPLICATION = 'picnic.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "picnicdb",
-#         "USER": "picnicuser",
-#         "PASSWORD": "fOqXJSYkMBAnsXuXxi5ycSzLseGjLCuf",
-#         "HOST": "dpg-d5j460ngi27c73emqmag-a.singapore-postgres.render.com",
-#         "PORT": "5432",
-#         "CONN_MAX_AGE": 60,  # connection pooling
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "picnicdb",
+        "USER": "picnicuser",
+        "PASSWORD": "fOqXJSYkMBAnsXuXxi5ycSzLseGjLCuf",
+        "HOST": "dpg-d5j460ngi27c73emqmag-a.singapore-postgres.render.com",
+        "PORT": "5432",
+        "CONN_MAX_AGE": 60,  # connection pooling
+    }
+}
 
 
 # Password validation
@@ -133,3 +134,5 @@ USE_TZ = True
 STATIC_URL = 'static/'
 # STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'static'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -30,7 +30,6 @@ class User(AbstractUser, PermissionsMixin):
     username = None
     phone = models.CharField(max_length=15, unique=True, db_index=True)
     candidate = models.IntegerField(default=1)
-    is_requested = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
     
     objects = UserManager()

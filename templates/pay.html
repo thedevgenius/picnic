@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    
+    <div class="max-w-sm mx-auto bg-white rounded-2xl shadow-md p-5">
+
+    <!-- Welcome -->
+    <p class="text-center text-sm text-slate-500 mb-1">Welcome,</p>
+    <p class="text-center text-lg font-bold text-slate-800 mb-4">{{ name }}</p>
+
+    <!-- Amount Card -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-4">
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-slate-500">Price per head</span>
+            <span class="text-sm font-bold text-slate-800">₹300</span>
+        </div>
+
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-slate-500">Participants</span>
+            <span class="text-sm font-bold text-slate-800">{{ candidate }}</span>
+        </div>
+
+        <div class="border-t border-dashed my-3"></div>
+
+        <div class="flex justify-between items-center">
+            <span class="text-base font-semibold text-slate-700">Total Amount</span>
+            <span class="text-xl font-black text-indigo-600">₹{{ amount }}</span>
+        </div>
+    </div>
+
+    <!-- QR Payment -->
+    <div class="text-center mb-4">
+        <p class="text-sm font-semibold text-slate-700 mb-2">Pay using UPI QR </p>
+
+        <img src="https://stagingwebsite4u.com/sg/qr.png" alt="UPI QR" class="w-48 mx-auto rounded-xl border">
+    </div>
+
+    <!-- OR -->
+    <div class="flex items-center gap-3 my-4">
+        <div class="flex-1 h-px bg-slate-200"></div>
+        <span class="text-xs text-slate-400 font-semibold">OR</span>
+        <div class="flex-1 h-px bg-slate-200"></div>
+    </div>
+
+    <!-- UPI Number -->
+    <div class="text-center">
+        <p class="text-xs text-slate-500 mb-1">Pay to UPI number</p>
+
+        <div class="inline-flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-full">
+            <span id="phoneNumber" class="text-lg font-bold tracking-wide">6295828230</span>
+            <button onclick="copyNumber()" class="text-slate-600 active:scale-95 transition"><i class="fa-solid fa-copy"></i></button>
+        </div>
+    </div>
+
+    <!-- Note -->
+    <p class="text-center text-xs text-slate-400 mt-4">If already paid, please wait up to <strong>1 hour</strong> for status update </p>
+
+</div>
+<script>
+    
+    function copyNumber() { 
+        const number = document.getElementById("phoneNumber").innerText; 
+    
+        navigator.clipboard.writeText(number).then(() => { 
+            alert("Number copied: " + number); 
+        }).catch(err => { 
+            console.error("Copy failed", err); 
+        }); 
+    } 
+    
+    // Optional: click number itself to copy 
+    document.getElementById("phoneNumber").addEventListener("click", copyNumber); 
+</script>
+{% endblock content %}
+    

@@ -4,35 +4,11 @@
 
 {% block content %}
 <div class="max-w-md mx-auto bg-white rounded-2xl shadow-sm p-6">
+
     
-    {% if upi_url %}
-        <p class="mb-2 text-center">Welcome, <strong>{{ name }}</strong></p>
-        <p class="text-center mb-2 text-gray-800">Please pay now to confirm your participation</p>
+    <h2 class="text-xl font-extrabold text-center mb-2">Picnic Contribution</h2>
 
-        <p class="text-gray-800 text-center text-lg mb-3">Full Amount: <strong>₹{{ amount }}</strong></p>
-
-        <img src="https://stagingwebsite4u.com/sg/qr.png" alt="" class="max-w-52 mx-auto block">
-
-        <p class="text-center text-lg my-3">OR</p>
-
-        <p class="text-center text-sm text-slate-500">Pay to below UPI number</p>
-        <p class="text-center"><span id="phoneNumber" style="cursor:pointer;" class="text-center text-xl font-bold">6295828230</span> <button onclick="copyNumber()" class="ml-1"><i class="fa-solid fa-copy"></i></button></p>
-        
-        
-
-
-        <p class="text-center text-gray-600 text-sm mt-3">If already paid wait for 1 hours to update status</p>
-    {% endif %}
-    
-    
-    {% if not user.is_authenticated %}
-        <h2 class="text-xl font-extrabold text-center mb-2">
-        🧺 Picnic Contribution
-    </h2>
-
-    <p class="text-sm text-slate-500 text-center mb-5">
-        ₹300 per person
-    </p>
+    <p class="text-sm text-slate-500 text-center mb-5">₹300 per person</p>
 
     <form method="post" id="payForm" class="space-y-4">
         {% csrf_token %}
@@ -46,20 +22,8 @@
                    name="name"
                    required
                    placeholder="Enter your name"
-                   class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-teal-500">
-        </div>
-
-        <!-- Phone -->
-        <div>
-            <label class="block text-sm font-bold text-slate-600 mb-1">
-                Phone Number
-            </label>
-            <input type="tel"
-                   name="phone"
-                   required
-                   pattern="[0-9]{10}"
-                   placeholder="10-digit mobile number"
-                   class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-teal-500">
+                   {% if user.first_name %}value="{{ user.first_name }}"{% endif %}
+                   class="w-full border rounded-xl px-4 py-3 outline-none focus:ring-1 focus:ring-teal-500">
         </div>
 
         <!-- Participants -->
@@ -70,12 +34,12 @@
             <select name="candidate"
                     id="participants"
                     required
-                    class="w-full border rounded-xl px-4 py-3 bg-white focus:ring-2 focus:ring-teal-500">
+                    class="w-full border rounded-xl px-4 py-3 bg-white focus:ring-1 focus:ring-teal-500">
                 <option value="1">1 Person</option>
-                <option value="2">2 Persons</option>
-                <option value="3">3 Persons</option>
-                <option value="4">4 Persons</option>
-                <option value="5">5 Persons</option>
+                <option value="2" {% if candidate == 2 %}selected{% endif %}>2 Persons</option>
+                <option value="3" {% if candidate == 3 %}selected{% endif %}>3 Persons</option>
+                <option value="4" {% if candidate == 4 %}selected{% endif %}>4 Persons</option>
+                <option value="5" {% if candidate == 5 %}selected{% endif %}>5 Persons</option>
             </select>
         </div>
 
@@ -83,21 +47,16 @@
         <div class="bg-slate-100 rounded-xl p-4 text-center">
             <p class="text-sm text-slate-600">Total Amount</p>
             <p class="text-3xl font-extrabold text-teal-600">
-                ₹ <span id="amount">300</span>
+                ₹ <span id="amount">{{ amount }}</span>
             </p>
         </div>
 
         <!-- Submit -->
-        <button type="submit"
-                class="w-full bg-teal-600 text-white rounded-xl py-3 font-bold active:scale-95 transition">
+        <button type="submit" class="w-full bg-teal-600 text-white rounded-xl py-3 font-bold active:scale-95 transition">
             🚀 Proceed to Pay
         </button>
 
-        <p class="text-xs text-center text-slate-400">
-            Payment will open in your UPI app
-        </p>
     </form>
-    {% endif %}
         
     
 </div>
@@ -121,18 +80,5 @@
 
         amountText.textContent = count * PRICE_PER_PERSON;
     });
-
-    function copyNumber() { 
-        const number = document.getElementById("phoneNumber").innerText; 
-    
-        navigator.clipboard.writeText(number).then(() => { 
-            alert("Number copied: " + number); 
-        }).catch(err => { 
-            console.error("Copy failed", err); 
-        }); 
-    } 
-    
-    // Optional: click number itself to copy 
-    document.getElementById("phoneNumber").addEventListener("click", copyNumber); 
 </script>
 {% endblock %}
